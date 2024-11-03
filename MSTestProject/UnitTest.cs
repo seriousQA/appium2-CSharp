@@ -22,7 +22,7 @@ public class UnitTest
         AppiumMethods.ClickOnElement("id", "btn_add");
         AppiumMethods.ClickOnElement("id", "btn_digit3");
         AppiumMethods.ClickOnElement("id", "btn_eq");
-        string actual = AppiumMethods.GetAttributeValueOfElement("id", "edt_formula", "text");
+        string actual = AppiumMethods.GetAttributeValue("id", "edt_formula", "text");
         string expected = "10";
         Assert.AreEqual(expected, actual);
     }
@@ -35,7 +35,7 @@ public class UnitTest
         AppiumMethods.ClickOnElement("id", "btn_sub");
         AppiumMethods.ClickOnElement("id", "btn_digit5");
         AppiumMethods.ClickOnElement("id", "btn_eq");
-        string actual = AppiumMethods.GetAttributeValueOfElement("id", "edt_formula", "text");
+        string actual = AppiumMethods.GetAttributeValue("id", "edt_formula", "text");
         string expected = "5";
         Assert.AreEqual(expected, actual);
     }
@@ -47,7 +47,7 @@ public class UnitTest
         AppiumMethods.ClickOnElement("id", "btn_div");
         AppiumMethods.ClickOnElement("id", "btn_digit4");
         AppiumMethods.ClickOnElement("id", "btn_eq");
-        string actual = AppiumMethods.GetAttributeValueOfElement("id", "edt_formula", "text");
+        string actual = AppiumMethods.GetAttributeValue("id", "edt_formula", "text");
         string expected = "2";
         Assert.AreEqual(expected, actual);
     }
@@ -61,7 +61,7 @@ public class UnitTest
         AppiumMethods.ClickOnElement("id", "btn_digit0");
         AppiumMethods.ClickOnElement("id", "btn_digit0");
         AppiumMethods.ClickOnElement("id", "btn_eq");
-        string actual = AppiumMethods.GetAttributeValueOfElement("id", "edt_formula", "text");
+        string actual = AppiumMethods.GetAttributeValue("id", "edt_formula", "text");
         string expected = "600";
         Assert.AreEqual(expected, actual);
     }
@@ -75,7 +75,7 @@ public class UnitTest
         AppiumMethods.ClickOnElement("xpath", "btn_sub");
         AppiumMethods.ClickOnElement("xpath", "btn_digit1");        
         AppiumMethods.ClickOnElement("xpath", "btn_eq");
-        string actual = AppiumMethods.GetAttributeValueOfElement("id", "edt_formula", "text");
+        string actual = AppiumMethods.GetAttributeValue("id", "edt_formula", "text");
         string expected = "1,1";
         Assert.AreEqual(expected, actual);
     }
@@ -88,7 +88,7 @@ public class UnitTest
         AppiumMethods.ClickOnElement("id", "btn_digit0");
         AppiumMethods.ClickOnElement("id", "btn_pct");      
         AppiumMethods.ClickOnElement("id", "btn_eq");
-        string actual = AppiumMethods.GetAttributeValueOfElement("id", "edt_formula", "text");
+        string actual = AppiumMethods.GetAttributeValue("id", "edt_formula", "text");
         string expected = "1";
         Assert.AreEqual(expected, actual);
     }
