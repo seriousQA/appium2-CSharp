@@ -7,7 +7,7 @@
 
 <h3 align="center"> Mobile testing using Appium 2.0 and CSharp</h3>
   <p align="center">    
-	Mobile (real devices) testing using Appium 2.0+, VS Code, CSharp and MSTest framework.  
+	Mobile (real devices and emulators) testing using Appium 2.0+, VS Code, CSharp and MSTest framework.  
     <br />
     <a href="https://github.com/seriousQA/appium2-CSharp"><strong>Explore the docs »</strong></a>
     <br />
@@ -42,12 +42,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 The tests are created in Visual Studio Code using MSTest (test framework for .NET applications).
-AUT is a native Huawei calculator (com.android.calculator2).
-Tested on real android device (
+AUT #1 is a native Huawei calculator (com.android.calculator2). Tested on real android device (
 "locale":"de_DE",
 "manufacturer":"HUAWEI",
 "model":"ANE-LX1",
 "platformVersion":"9",
+).
+
+AUT #2 is a com.android.settings. Tested on emulator-5554 (
+"locale":"en_EN",
+"platformName": "Android",
+"platformVersion":"13",
 ).
 
 ### Built With
