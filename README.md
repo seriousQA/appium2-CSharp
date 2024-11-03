@@ -42,6 +42,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 The tests are created in Visual Studio Code using MSTest (test framework for .NET applications).
+
 AUT #1 is a native Huawei calculator (com.android.calculator2). Tested on real android device (
 "locale":"de_DE",
 "manufacturer":"HUAWEI",
