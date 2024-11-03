@@ -332,4 +332,26 @@ public class ElementsRepository
         return result;
     }
 
+    /// <summary> Emulator >> Settings: "Apps" TextView. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string t_Apps (string locator)
+    {
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"Apps\"]";
+        }
+        return result;
+    }
+
+    /// <summary> Emulator >> Settings: "About emulated device" TextView. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string t_AboutEmulatedDevice (string locator)
+    {
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"About emulated device\"]";
+        }
+        return result;
+    }
+
 }

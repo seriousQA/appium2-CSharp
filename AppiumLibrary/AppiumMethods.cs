@@ -62,6 +62,26 @@ public class AppiumMethods
         Console.WriteLine("Android Driver is started.");
     }
 
+    /// <summary> Initialize Android driver.</summary>
+    public static void SetupAndroidDriverOnEmulator()
+    {
+        var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
+        var driverOptions = new AppiumOptions()
+        {
+            AutomationName = AutomationName.AndroidUIAutomator2,
+            PlatformName = "Android",
+            PlatformVersion = "13",
+            DeviceName = "emulator-5554"
+        };
+        driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
+        driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
+        driverOptions.AddAdditionalAppiumOption("appium:autoGrantPermissions", "true");
+
+        _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
+        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        Console.WriteLine("Android Driver is started.");
+    }
+
     /// <summary> Dispose Android driver. </summary>
     public static void DisposeAndroidDriver()
     {
@@ -405,34 +425,37 @@ public class AppiumMethods
         _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator(command));
         Console.WriteLine("Driver: ScrollToTop().");
     }
-    
+
     /// <summary> Swipe. </summary>
     public static void Swipe()
-    {      
+    {
         int screen_height = _driver.Manage().Window.Size.Height;
         int screen_width = _driver.Manage().Window.Size.Width;
 
-        int startY = (int) (screen_height * 0.8);
-        int endY = (int) (screen_width * 0.21);
-        int startX = (int) (screen_width * 2.1);
+        int startY = (int)(screen_height * 0.8);
+        int endY = (int)(screen_width * 0.2);
+        int startX = (int)(screen_width / 2);
         int endX = endY;
-        
+
         PointerInputDevice finger = new PointerInputDevice(PointerKind.Touch, "finger");
-        var sequence  = new ActionSequence(finger);
+        var sequence = new ActionSequence(finger);
 
         var move1 = finger.CreatePointerMove(CoordinateOrigin.Viewport, startX, startY, TimeSpan.FromMilliseconds(100));
         var down = finger.CreatePointerDown(OpenQA.Selenium.Interactions.MouseButton.Left);
         var pause = finger.CreatePause(TimeSpan.FromMilliseconds(200));
-        var move2 = finger.CreatePointerMove(CoordinateOrigin.Viewport, endX, endY, TimeSpan.FromMilliseconds(100));
+        var move2 = finger.CreatePointerMove(CoordinateOrigin.Viewport, startX, endY, TimeSpan.FromMilliseconds(100));
         var up = finger.CreatePointerUp(OpenQA.Selenium.Interactions.MouseButton.Left);
-        
+
         sequence.AddAction(move1);
         sequence.AddAction(down);
         sequence.AddAction(pause);
         sequence.AddAction(move2);
         sequence.AddAction(up);
 
-        _driver.PerformActions((IList<ActionSequence>)sequence);
+        var actions_seq = new List<ActionSequence>{
+            sequence
+        };
+        _driver.PerformActions(actions_seq);
         Console.WriteLine("Driver: Swipe()");
     }
 
@@ -467,7 +490,10 @@ public class AppiumMethods
             sequence.AddAction(pause);
             sequence.AddAction(up);
 
-            _driver.PerformActions((IList<ActionSequence>)sequence);
+            var actions_seq = new List<ActionSequence>{
+            sequence
+        };
+            _driver.PerformActions(actions_seq);
             Console.WriteLine("Driver: LongPress() on " + element);
         }
         catch (Exception ex)
