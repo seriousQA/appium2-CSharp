@@ -42,6 +42,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 The tests are created in Visual Studio Code using MSTest (test framework for .NET applications).
+<p align="left">
+<img src="https://github.com/user-attachments/assets/3c1a48a6-4b5f-4cc7-9ae7-2adf557f1e00" alt="appium-2.0" height="50"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" alt="sharp" height="50"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg" alt="net" height="50"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" alt="vscode" height="50" />
+<img src="https://github.com/user-attachments/assets/0de8b7b2-afb9-48f5-9273-ce2fc793379a" alt="mstest" height="50"/>
+</p>
 
 AUT #1 is a native Huawei calculator (com.android.calculator2). Tested on real android device (
 "locale":"de_DE",
