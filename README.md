@@ -82,9 +82,14 @@ Necessary tools and packages:
 * appium-doctor (optional)
 
 Used packages:
-* Appium.WebDriver (e.g., 6.0.0)
+* Appium.WebDriver (e.g., 8.0.0)
 * Newtonsoft.Json (e.g., 13.0.3)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- QUICK START -->
+1) Open the project and build it.
+2) Prepare an emulator with Android 13. Start it.
+3) Go to section "Testing" and run EmulatorUnitTests module.
 
 <!-- LICENSE -->
 ## License
