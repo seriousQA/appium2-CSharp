@@ -34,6 +34,7 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
       </ul>
     </li>
+    <li><a href="#quick-start">Quick start</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -87,6 +88,7 @@ Used packages:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- QUICK START -->
+## Qick start
 1) Open the project and build it.
 2) Prepare an emulator with Android 13. Start it.
 3) Go to section "Testing" and run EmulatorUnitTests module.
