@@ -31,7 +31,10 @@ public class WebTestSet
         foreach (var content in AppiumMethods.GetElements("xpath", "Geoplotnik_Navlink"))
         {
             string contentDesc = content.GetAttribute("content-desc");
-            Assert.IsTrue(contentDesc.Equals("Home") || contentDesc.Equals("General plots") || contentDesc.Equals("Rock classification") || contentDesc.Equals("Series discriminant templates"));
+            Assert.IsTrue(contentDesc.Equals("Home")
+            || contentDesc.Equals("General plots")
+            || contentDesc.Equals("Rock classification")
+            || contentDesc.Equals("Series discriminant templates")); // Validate that the content description matches expected values
         }
     }
 
