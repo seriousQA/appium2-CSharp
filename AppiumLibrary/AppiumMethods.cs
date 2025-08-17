@@ -4,6 +4,7 @@ using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.Service;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 namespace AppiumLibrary;
 
@@ -90,7 +91,7 @@ public class AppiumMethods
     }
 
     /// <summary> Activate App. </summary>
-    /// <param name="apkName"> string apk name. </param>
+    /// <param name="apkName"> string, apk name. </param>
     public static void ActivateApp(string apkName)
     {
         try
@@ -106,7 +107,7 @@ public class AppiumMethods
     }
 
     /// <summary> Terminate App. </summary>
-    /// <param name="apkName"> string apk name. </param>
+    /// <param name="apkName"> string, apk name. </param>
     public static void TerminateApp(string apkName)
     {
         try
@@ -122,7 +123,7 @@ public class AppiumMethods
     }
 
     /// <summary> Remove App. </summary>
-    /// <param name="apkName"> string apk name. </param>
+    /// <param name="apkName"> string, apk name. </param>
     public static void RemoveApp(string apkName)
     {
         try
@@ -138,7 +139,7 @@ public class AppiumMethods
     }
 
     /// <summary> Install App. </summary>
-    /// <param name="apkPath"> string absolute path to apk file. </param>
+    /// <param name="apkPath"> string, absolute path to apk file. </param>
     public static void InstallApp(string apkPath)
     {
         try
@@ -177,7 +178,7 @@ public class AppiumMethods
     }
 
     /// <summary> Execute shell script. </summary>
-    /// <param name="script"> string script. </param>
+    /// <param name="script"> string, script body. </param>
     public static void ExecuteShellScript(string script)
     {
         //E.g., to refresh Android mediastore using adb: 
@@ -210,8 +211,8 @@ public class AppiumMethods
     }
 
     /// <summary> Click on element. </summary>
-    /// <param name="locator"> string locator. </param>
-    /// <param name="element"> string unique element. </param>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element. </param>
     public static void ClickOnElement(string locator, string element)
     {
         Type repo = typeof(AppiumLibrary.ElementsRepository);
@@ -237,9 +238,9 @@ public class AppiumMethods
     }
 
     /// <summary> Get attribute value of element. </summary>
-    /// <param name="locator"> string locator. </param>
-    /// <param name="element"> string unique element. </param>
-    /// <param name="attributeName"> string attribut to GET. </param>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element. </param>
+    /// <param name="attributeName"> string, attribut to GET. </param>
     public static string GetAttributeValue(string locator, string element, string attributeName)
     {
         Type repo = typeof(AppiumLibrary.ElementsRepository);
@@ -267,9 +268,9 @@ public class AppiumMethods
     }
 
     /// <summary> SendKeys on element. </summary>
-    /// <param name="locator"> string locator. </param>
-    /// <param name="element"> string unique element. </param>
-    /// <param name="value"> string value to send. </param>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element. </param>
+    /// <param name="value"> string, value to send. </param>
     public static void SendKeysOnElement(string locator, string element, string value)
     {
         Type repo = typeof(AppiumLibrary.ElementsRepository);
@@ -303,8 +304,8 @@ public class AppiumMethods
     }
 
     /// <summary> Is element displayed? </summary>
-    /// <param name="locator"> string locator. </param>
-    /// <param name="element"> string unique element. </param>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element. </param>
     public static void ValidateIsDisplayed(string locator, string element)
     {
         Type repo = typeof(AppiumLibrary.ElementsRepository);
@@ -342,8 +343,8 @@ public class AppiumMethods
     }
 
     /// <summary> Is element checked? </summary>
-    /// <param name="locator"> string locator. </param>
-    /// <param name="element"> string unique element. </param>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element. </param>
     public static void ValidateIsChecked(string locator, string element)
     {
         Type repo = typeof(AppiumLibrary.ElementsRepository);
@@ -382,8 +383,8 @@ public class AppiumMethods
 
     /// <summary> Place a file onto the device in a particular place. </summary>
     /// <param name="pathOnDevice"> string absolute path on mobile device. </param>
-    /// <param name="fileName"> string file name with format of file. </param>
-    /// <param name="sourceFilePath"> string absolute path on computer. </param>
+    /// <param name="fileName"> string, file name with format of file. </param>
+    /// <param name="sourceFilePath"> string, absolute path on computer. </param>
     public static void PushFile(string pathOnDevice, string fileName, string sourceFilePath)
     {
         try
@@ -400,8 +401,8 @@ public class AppiumMethods
     }
 
     /// <summary> Retrieve a file from the device's file system. </summary>
-    /// <param name="pathOnDevice"> string absolute path on mobile device. </param>
-    /// <param name="pathOnComputer"> string absolute path on computer. </param>
+    /// <param name="pathOnDevice"> string, absolute path on mobile device. </param>
+    /// <param name="pathOnComputer"> string, absolute path on computer. </param>
     public static void PullFile(string pathOnDevice, string pathOnComputer)
     {
         try
@@ -460,8 +461,8 @@ public class AppiumMethods
     }
 
     /// <summary> Long press on element. </summary>
-    /// <param name="locator"> string locator. </param>
-    /// <param name="element"> string unique element. </param>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element. </param>
     public static void LongPress(string locator, string element)
     {
         Type repo = typeof(AppiumLibrary.ElementsRepository);
@@ -500,5 +501,123 @@ public class AppiumMethods
         {
             Console.WriteLine("An error occured: " + ex.Message);
         }
+    }
+    /// <summary> Navigate to URL. </summary>
+    /// <param name="url"> string, URL to navigate to. </param>
+    public static void NavigateToUrl(string url)
+    {
+        try
+        {
+            _driver.Navigate().GoToUrl(url);
+            Console.WriteLine("Driver: Navigate to " + url);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+            Console.WriteLine("Driver: Could not navigate to " + url);
+        }
+    }
+    /// <summary> Refresh the current page. </summary>
+    /// <remarks> This method is useful for web testing scenarios. </remarks>
+    public static void RefreshPage()
+    {
+        try
+        {
+            _driver.Navigate().Refresh();
+            Console.WriteLine("Driver: Page refreshed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+            Console.WriteLine("Driver: Could not refresh the page.");
+        }
+    }
+
+    /// <summary> Wait until element is visible. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="timeoutInSeconds"> int, timeout in seconds. </param>
+    public static void WaitTillElementIsVisible(string locator, string element, int timeoutInSeconds)
+    {
+        Type repo = typeof(AppiumLibrary.ElementsRepository);
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutInSeconds));
+        IWebElement el = null;
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                wait.Until(driver =>
+                {
+                    el = driver.FindElement(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString()));
+                    Console.WriteLine("Driver: Element " + element + " is visible.");
+                    return el.Displayed;
+                });
+            }
+            if (locator.Equals("TagName"))
+            {
+                wait.Until(driver =>
+                {
+                    el = driver.FindElement(By.TagName(elementInfo.Invoke(repo, new[] { locator }).ToString()));
+                    Console.WriteLine("Driver: Element " + element + " is visible.");
+                    return el.Displayed;
+                });
+            }
+            if (locator.Equals("xpath"))
+            {
+                wait.Until(driver =>
+                {
+                    el = driver.FindElement(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString()));
+                    Console.WriteLine("Driver: Element " + element + " is visible.");
+                    return el.Displayed;
+                });
+            }
+            if (locator.Equals("css"))
+            {
+                wait.Until(driver =>
+                {
+                    el = driver.FindElement(By.CssSelector(elementInfo.Invoke(repo, new[] { locator }).ToString()));
+                    Console.WriteLine("Driver: Element " + element + " is visible.");
+                    return el.Displayed;
+                });
+            }
+        }
+        catch (WebDriverTimeoutException)
+        {
+            Console.WriteLine("Driver: Element " + element + " is not visible after " + timeoutInSeconds + " seconds.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
+    }
+
+    /// <summary> Press a key code on the keyboard. </summary>
+    /// <param name="key"> int, key to press (e.g., "search", "done"). 
+    /// <see cref="https://developer.android.com/reference/android/view/KeyEvent"/>  </param>
+    public static void PressKeyCode(int key)
+    {
+        try
+        {
+            _driver.PressKeyCode(key);
+            Console.WriteLine("Driver: Pressed key " + key);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+            Console.WriteLine("Driver: Could not press key " + key);
+        }
+    }
+    /// <summary> Get elements by locator. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <returns> List of IWebElement. </returns>
+    public static List<IWebElement> GetElements(string locator, string element)
+    {
+        List<IWebElement> elements = new List<IWebElement>();
+        Type repo = typeof(AppiumLibrary.ElementsRepository);
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        elements = new List<IWebElement>();
+        return elements;
     }
 }

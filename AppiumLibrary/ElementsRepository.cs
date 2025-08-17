@@ -7,9 +7,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 0 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit0(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_0";
         }
         if (locator.Equals("xpath"))
@@ -22,9 +22,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 1 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit1(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_1";
         }
         if (locator.Equals("xpath"))
@@ -37,9 +37,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 2 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit2(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_2";
         }
         if (locator.Equals("xpath"))
@@ -52,9 +52,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 3 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit3(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_3";
         }
         if (locator.Equals("xpath"))
@@ -67,9 +67,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 4 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit4(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_4";
         }
         if (locator.Equals("xpath"))
@@ -82,9 +82,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 5 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit5(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_5";
         }
         if (locator.Equals("xpath"))
@@ -97,9 +97,9 @@ public class ElementsRepository
     //// <summary> Calculator: digit 6 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit6(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_6";
         }
         if (locator.Equals("xpath"))
@@ -112,9 +112,9 @@ public class ElementsRepository
     /// <summary> Calculator: digit 7 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit7(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_7";
         }
         if (locator.Equals("xpath"))
@@ -127,9 +127,9 @@ public class ElementsRepository
     /// <summary> Calculator: digit 8 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit8(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_8";
         }
         if (locator.Equals("xpath"))
@@ -142,9 +142,9 @@ public class ElementsRepository
     /// <summary> Calculator: digit 9 Button. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_digit9(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/digit_9";
         }
         if (locator.Equals("xpath"))
@@ -159,11 +159,11 @@ public class ElementsRepository
     public static string btn_add(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "plus";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/op_add";
         }
         if (locator.Equals("xpath"))
@@ -178,11 +178,11 @@ public class ElementsRepository
     public static string btn_sub(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "minus";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/op_sub";
         }
         if (locator.Equals("xpath"))
@@ -197,11 +197,11 @@ public class ElementsRepository
     public static string btn_div(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "dividieren";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/op_div";
         }
         if (locator.Equals("xpath"))
@@ -216,11 +216,11 @@ public class ElementsRepository
     public static string btn_mul(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "Mal";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/op_mul";
         }
         if (locator.Equals("xpath"))
@@ -232,14 +232,14 @@ public class ElementsRepository
 
     /// <summary> Calculator: equal ImageView. </summary>
     /// <param name="locator"> string locator. </param>
-    public static string btn_eq (string locator)
+    public static string btn_eq(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "ist gleich";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/eq";
         }
         if (locator.Equals("xpath"))
@@ -251,10 +251,10 @@ public class ElementsRepository
 
     /// <summary> Calculator: formula EditText. </summary>
     /// <param name="locator"> string locator. </param>
-    public static string edt_formula (string locator)
+    public static string edt_formula(string locator)
     {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/formula";
         }
         if (locator.Equals("xpath"))
@@ -267,9 +267,9 @@ public class ElementsRepository
     /// <summary>  Calculator: C (clear) ImageView. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_clear(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/op_clr";
         }
         if (locator.Equals("xpath"))
@@ -282,9 +282,9 @@ public class ElementsRepository
     /// <summary>  Calculator: delete ImageView. </summary>
     /// <param name="locator"> string locator. </param>
     public static string btn_delete(string locator)
-    {        
+    {
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/del";
         }
         if (locator.Equals("xpath"))
@@ -296,14 +296,14 @@ public class ElementsRepository
 
     /// <summary> Calculator: percentage Button. </summary>
     /// <param name="locator"> string locator. </param>
-    public static string btn_pct (string locator)
+    public static string btn_pct(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "Prozent";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/op_pct";
         }
         if (locator.Equals("xpath"))
@@ -315,14 +315,14 @@ public class ElementsRepository
 
     /// <summary> Calculator: decimal point Button. </summary>
     /// <param name="locator"> string locator. </param>
-    public static string btn_dec_point (string locator)
+    public static string btn_dec_point(string locator)
     {
         if (locator.Equals("accessibility id"))
-        {            
+        {
             result = "Dezimalzeichen";
         }
         if (locator.Equals("id"))
-        {            
+        {
             result = "com.android.calculator2:id/dec_point";
         }
         if (locator.Equals("xpath"))
@@ -334,7 +334,7 @@ public class ElementsRepository
 
     /// <summary> Emulator >> Settings: "Apps" TextView. </summary>
     /// <param name="locator"> string locator. </param>
-    public static string t_Apps (string locator)
+    public static string t_Apps(string locator)
     {
         if (locator.Equals("xpath"))
         {
@@ -345,11 +345,78 @@ public class ElementsRepository
 
     /// <summary> Emulator >> Settings: "About emulated device" TextView. </summary>
     /// <param name="locator"> string locator. </param>
-    public static string t_AboutEmulatedDevice (string locator)
+    public static string t_AboutEmulatedDevice(string locator)
     {
         if (locator.Equals("xpath"))
         {
             result = "//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"About emulated device\"]";
+        }
+        return result;
+    }
+
+    /// <summary> Chrome: "search box" EditText. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string chrome_search_box_text(string locator)
+    {
+        if (locator.Equals("id"))
+        {
+            result = "com.android.chrome:id/search_box_text";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.widget.EditText[@resource-id=\"com.android.chrome:id/search_box_text\"]";
+        }
+        return result;
+    }
+
+    /// <summary> Chrome: "url_bar" EditText. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string chrome_url_bar(string locator)
+    {
+        if (locator.Equals("id"))
+        {
+            result = "com.android.chrome:id/url_bar";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.widget.EditText[@resource-id=\"com.android.chrome:id/url_bar\"]";
+        }
+        return result;
+    }
+
+    // <summary> Geoplotnik: "Home" WebView. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string Geoplotnik_Home(string locator)
+    {
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.webkit.WebView[@text=\"Home\"]";
+        }
+        return result;
+    }
+
+    // <summary> Geoplotnik: "header-burger" Button. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string Geoplotnik_HeaderBurger(string locator)
+    {
+        if (locator.Equals("id"))
+        {
+            result = "header-burger";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.widget.Button[@resource-id=\"header-burger\"]";
+        }
+        return result;
+    }
+
+    // <summary> Geoplotnik: "Home" WebView. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string Geoplotnik_Navlink(string locator)
+    {
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.view.View[contains(@resource-id, \"navlink\")]";
         }
         return result;
     }

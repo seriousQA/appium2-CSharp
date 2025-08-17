@@ -64,6 +64,11 @@ AUT #2 is a com.android.settings. Tested on emulator-5554 (
 "platformVersion":"13",
 ).
 
+AUT #3 is a om.android.chrome. Tested on emulator-5554 (
+"locale":"en_EN",
+"platformName": "Android",
+).
+
 ### Built With
 * Visual Studio Code: https://code.visualstudio.com
 * dotnet: https://dotnet.microsoft.com
