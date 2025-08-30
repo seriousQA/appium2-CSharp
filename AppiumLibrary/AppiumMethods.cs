@@ -12,6 +12,7 @@ public class AppiumMethods
 {
     private static AppiumLocalService service;
     private static AndroidDriver _driver;
+    private static Type repo = typeof(AppiumLibrary.ElementsRepository);
 
     /// <summary> Build and start Appium Service. </summary>
     public static void BuildAppiumLocalService()
@@ -215,7 +216,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void ClickOnElement(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         try
@@ -243,7 +243,6 @@ public class AppiumMethods
     /// <param name="attributeName"> string, attribut to GET. </param>
     public static string GetAttributeValue(string locator, string element, string attributeName)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         string actualValue = "";
@@ -273,7 +272,6 @@ public class AppiumMethods
     /// <param name="value"> string, value to send. </param>
     public static void SendKeysOnElement(string locator, string element, string value)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         AppiumElement el;
         try
@@ -308,7 +306,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void ValidateIsDisplayed(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         try
@@ -347,7 +344,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void ValidateIsChecked(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         try
@@ -465,7 +461,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void LongPress(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         AppiumElement el = null;
         PointerInputDevice finger = new PointerInputDevice(PointerKind.Touch, "finger");
@@ -539,7 +534,6 @@ public class AppiumMethods
     /// <param name="timeoutInSeconds"> int, timeout in seconds. </param>
     public static void WaitTillElementIsVisible(string locator, string element, int timeoutInSeconds)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutInSeconds));
         IWebElement el = null;
@@ -608,6 +602,7 @@ public class AppiumMethods
             Console.WriteLine("Driver: Could not press key " + key);
         }
     }
+
     /// <summary> Get elements by locator. </summary>
     /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
     /// <param name="element"> string, unique element name. </param>
@@ -615,9 +610,111 @@ public class AppiumMethods
     public static List<IWebElement> GetElements(string locator, string element)
     {
         List<IWebElement> elements = new List<IWebElement>();
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         elements = new List<IWebElement>();
         return elements;
+    }
+
+    /// <summary> Click on element in list by index. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="index"> int, index of element in list. </param>
+    public static void ClickOnElementInList(string locator, string element, int index)
+    {
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        List<IWebElement> elements = new List<IWebElement>();
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                elements[index].Click();
+                Console.WriteLine("Driver: Click() on " + element + " in list at index " + index);
+            }
+            if (locator.Equals("xpath"))
+            {
+                elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                elements[index].Click();
+                Console.WriteLine("Driver: Click() on " + element + " in list at index " + index);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
+    }
+
+    /// <summary> Get attribute value of element in list by index. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="index"> int, index of element in list. </param>
+    /// <param name="attributeName"> string, attribute to GET. </param>
+    /// <returns> string, attribute value. </returns>
+    public static string GetAttributeValueFromElementInList(string locator, string element, int index, string attributeName)
+    {
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        List<IWebElement> elements = new List<IWebElement>();
+        string actualValue = "";
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                actualValue = elements[index].GetAttribute(attributeName);
+                Console.WriteLine("Driver: GetAttribute(" + attributeName + ") of " + element + " in list at index " + index);
+            }
+            if (locator.Equals("xpath"))
+            {
+                elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                actualValue = elements[index].GetAttribute(attributeName);
+                Console.WriteLine("Driver: GetAttribute(" + attributeName + ") of " + element + " in list at index " + index);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
+        return actualValue;
+    }
+    
+    /// <summary> Is element [N] in list displayed? </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="index"> int, index of element in list. </param>
+    public static void ValidateIsDisplayedElementInList(string locator, string element, int index)
+    {
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        List<IWebElement> elements = new List<IWebElement>();
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                if (elements[index].GetAttribute("displayed").ToString().Equals("true"))
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is displayed.");
+                }
+                else
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is not displayed.");
+                }
+            }
+            if (locator.Equals("xpath"))
+            {
+                elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                if (elements[index].GetAttribute("displayed").ToString().Equals("true"))
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is displayed.");
+                }
+                else
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is not displayed.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
     }
 }
