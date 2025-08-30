@@ -643,7 +643,7 @@ public class AppiumMethods
             Console.WriteLine("An error occured: " + ex.Message);
         }
     }
-    
+
     /// <summary> Get attribute value of element in list by index. </summary>
     /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
     /// <param name="element"> string, unique element name. </param>
@@ -675,5 +675,46 @@ public class AppiumMethods
             Console.WriteLine("An error occured: " + ex.Message);
         }
         return actualValue;
+    }
+    
+    /// <summary> Is element [N] in list displayed? </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="index"> int, index of element in list. </param>
+    public static void ValidateIsDisplayedElementInList(string locator, string element, int index)
+    {
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        List<IWebElement> elements = new List<IWebElement>();
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                if (elements[index].GetAttribute("displayed").ToString().Equals("true"))
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is displayed.");
+                }
+                else
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is not displayed.");
+                }
+            }
+            if (locator.Equals("xpath"))
+            {
+                elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                if (elements[index].GetAttribute("displayed").ToString().Equals("true"))
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is displayed.");
+                }
+                else
+                {
+                    Console.WriteLine("Driver: Element " + element + " in list at index " + index + " is not displayed.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
     }
 }
