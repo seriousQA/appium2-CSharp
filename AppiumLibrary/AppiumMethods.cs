@@ -602,7 +602,7 @@ public class AppiumMethods
             Console.WriteLine("Driver: Could not press key " + key);
         }
     }
-    
+
     /// <summary> Get elements by locator. </summary>
     /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
     /// <param name="element"> string, unique element name. </param>
@@ -614,13 +614,13 @@ public class AppiumMethods
         elements = new List<IWebElement>();
         return elements;
     }
-    
+
     /// <summary> Click on element in list by index. </summary>
     /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
     /// <param name="element"> string, unique element name. </param>
     /// <param name="index"> int, index of element in list. </param>
     public static void ClickOnElementInList(string locator, string element, int index)
-    {        
+    {
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         List<IWebElement> elements = new List<IWebElement>();
         try
@@ -642,5 +642,38 @@ public class AppiumMethods
         {
             Console.WriteLine("An error occured: " + ex.Message);
         }
+    }
+    
+    /// <summary> Get attribute value of element in list by index. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="index"> int, index of element in list. </param>
+    /// <param name="attributeName"> string, attribute to GET. </param>
+    /// <returns> string, attribute value. </returns>
+    public static string GetAttributeValueFromElementInList(string locator, string element, int index, string attributeName)
+    {
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        List<IWebElement> elements = new List<IWebElement>();
+        string actualValue = "";
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                actualValue = elements[index].GetAttribute(attributeName);
+                Console.WriteLine("Driver: GetAttribute(" + attributeName + ") of " + element + " in list at index " + index);
+            }
+            if (locator.Equals("xpath"))
+            {
+                elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                actualValue = elements[index].GetAttribute(attributeName);
+                Console.WriteLine("Driver: GetAttribute(" + attributeName + ") of " + element + " in list at index " + index);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
+        return actualValue;
     }
 }
