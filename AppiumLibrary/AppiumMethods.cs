@@ -620,4 +620,34 @@ public class AppiumMethods
         elements = new List<IWebElement>();
         return elements;
     }
+    
+    /// <summary> Click on element in list by index. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="index"> int, index of element in list. </param>
+    public static void ClickOnElementInList(string locator, string element, int index)
+    {
+        Type repo = typeof(AppiumLibrary.ElementsRepository);
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        List<IWebElement> elements = new List<IWebElement>();
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                elements[index].Click();
+                Console.WriteLine("Driver: Click() on " + element + " in list at index " + index);
+            }
+            if (locator.Equals("xpath"))
+            {
+                elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
+                elements[index].Click();
+                Console.WriteLine("Driver: Click() on " + element + " in list at index " + index);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }
+    }
 }
