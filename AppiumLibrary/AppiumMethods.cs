@@ -12,6 +12,7 @@ public class AppiumMethods
 {
     private static AppiumLocalService service;
     private static AndroidDriver _driver;
+    private static Type repo = typeof(AppiumLibrary.ElementsRepository);
 
     /// <summary> Build and start Appium Service. </summary>
     public static void BuildAppiumLocalService()
@@ -215,7 +216,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void ClickOnElement(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         try
@@ -243,7 +243,6 @@ public class AppiumMethods
     /// <param name="attributeName"> string, attribut to GET. </param>
     public static string GetAttributeValue(string locator, string element, string attributeName)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         string actualValue = "";
@@ -273,7 +272,6 @@ public class AppiumMethods
     /// <param name="value"> string, value to send. </param>
     public static void SendKeysOnElement(string locator, string element, string value)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         AppiumElement el;
         try
@@ -308,7 +306,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void ValidateIsDisplayed(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         try
@@ -347,7 +344,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void ValidateIsChecked(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
 
         try
@@ -465,7 +461,6 @@ public class AppiumMethods
     /// <param name="element"> string, unique element. </param>
     public static void LongPress(string locator, string element)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         AppiumElement el = null;
         PointerInputDevice finger = new PointerInputDevice(PointerKind.Touch, "finger");
@@ -539,7 +534,6 @@ public class AppiumMethods
     /// <param name="timeoutInSeconds"> int, timeout in seconds. </param>
     public static void WaitTillElementIsVisible(string locator, string element, int timeoutInSeconds)
     {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutInSeconds));
         IWebElement el = null;
@@ -608,6 +602,7 @@ public class AppiumMethods
             Console.WriteLine("Driver: Could not press key " + key);
         }
     }
+    
     /// <summary> Get elements by locator. </summary>
     /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
     /// <param name="element"> string, unique element name. </param>
@@ -615,7 +610,6 @@ public class AppiumMethods
     public static List<IWebElement> GetElements(string locator, string element)
     {
         List<IWebElement> elements = new List<IWebElement>();
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         elements = new List<IWebElement>();
         return elements;
@@ -626,8 +620,7 @@ public class AppiumMethods
     /// <param name="element"> string, unique element name. </param>
     /// <param name="index"> int, index of element in list. </param>
     public static void ClickOnElementInList(string locator, string element, int index)
-    {
-        Type repo = typeof(AppiumLibrary.ElementsRepository);
+    {        
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
         List<IWebElement> elements = new List<IWebElement>();
         try
