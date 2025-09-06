@@ -35,7 +35,7 @@
       </ul>
     </li>
     <li><a href="#quick-start">Quick start</a></li>
-    <li><a href="#how-to-generate-allure-report">Quick start</a></li>
+    <li><a href="#how-to-generate-allure-report">How to generate allure report</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -116,6 +116,7 @@ dotnet test MSTestProject/bin/Debug/net8.0/MSTestProject.dll --filter "Name=Sett
 trx-file is created at "your\path\to\appium2-CSharp\TestResults\"
 
 (!) There is no NuGet package to add for MSTest Allure integration. The only way is to use the allure-commandline to generate report from trx-file.
+
 3) To generate an Allure report from the .trx file (the test result format from MSTest), follow these steps:
 A1) Install allure-commandline:
 ```terminal
