@@ -35,6 +35,7 @@
       </ul>
     </li>
     <li><a href="#quick-start">Quick start</a></li>
+    <li><a href="#how-to-generate-allure-report">How to generate allure report</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -71,9 +72,10 @@ AUT #3 is a com.android.chrome. Tested on emulator-5554 (
 
 ### Built With
 * Visual Studio Code: https://code.visualstudio.com
-* dotnet: https://dotnet.microsoft.com
-* appium (dotnet-client): https://github.com/appium/dotnet-client
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+* dotnet (8.0): https://dotnet.microsoft.com
+* appium (dotnet-client, 2.0+): https://github.com/appium/dotnet-client
+* Android Studio: https://developer.android.com/studio
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -86,25 +88,59 @@ Necessary tools and packages:
 * Appium 2.0+ with uiautomator2 driver
 * Appium-Inspector
 * appium-doctor (optional)
+* Android Studio (AVD)
+* allure-commandline 2.34.1+
+* net 8.0
 
 Used packages:
 * Appium.WebDriver (e.g., 8.0.0)
 * Newtonsoft.Json (e.g., 13.0.3)
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- QUICK START -->
 ## Quick start
 1) Open the project and build it.
-2) Prepare an emulator with Android 13. Start it.
-3) Go to section "Testing" and run EmulatorUnitTests module.
+2) Create the AVD - an emulator with Android 13 (using Android Studio).
+3) Go to section "Testing" and run "EmulatorUnitTests" module.
+
+<!-- ALLURE REPORT -->
+## How to generate allure report
+1) Build the project.
+2) Generate .trx report using Microsoft.Testing.Extensions.TrxReport:
+(!) Make sure the path and framework version (net8.0) match your build output. 
+Run this command from the root of your workspace.
+```terminal
+// to run only the Settings test from MSTestProject.dll with the trx-logger:
+dotnet test MSTestProject/bin/Debug/net8.0/MSTestProject.dll --filter "Name=Settings" --logger:trx
+```
+trx-file is created at "your\path\to\appium2-CSharp\TestResults\"
+
+(!) There is no NuGet package to add for MSTest Allure integration. The only way is to use the allure-commandline to generate report from trx-file.
+
+3) To generate an Allure report from the .trx file (the test result format from MSTest), follow these steps:
+A1) Install allure-commandline:
+```terminal
+npm install -g allure-commandline
+```
+A2) Then generate the report:
+```terminal
+// allure generate <allure-results_folder>
+allure generate "D:\git\appium2-CSharp\TestResults\"
+```
+A3) Open the report:
+```terminal
+// allure open <output_folder>
+allure open "D:\git\appium2-CSharp\TestResults\allure-report\"
+```
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 Distributed under the Apache 2.0 License. See `LICENSE.txt` for more information.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
 Project Link: [link](https://github.com/seriousQA/appium2-CSharp)
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
