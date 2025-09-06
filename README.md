@@ -75,7 +75,7 @@ AUT #3 is a com.android.chrome. Tested on emulator-5554 (
 * dotnet (8.0): https://dotnet.microsoft.com
 * appium (dotnet-client, 2.0+): https://github.com/appium/dotnet-client
 * Android Studio: https://developer.android.com/studio
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -95,7 +95,7 @@ Necessary tools and packages:
 Used packages:
 * Appium.WebDriver (e.g., 8.0.0)
 * Newtonsoft.Json (e.g., 13.0.3)
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- QUICK START -->
 ## Quick start
@@ -132,14 +132,15 @@ A3) Open the report:
 // allure open <output_folder>
 allure open "D:\git\appium2-CSharp\TestResults\allure-report\"
 ```
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 Distributed under the Apache 2.0 License. See `LICENSE.txt` for more information.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
 Project Link: [link](https://github.com/seriousQA/appium2-CSharp)
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#about-the-project">back to top</a>)</p>
