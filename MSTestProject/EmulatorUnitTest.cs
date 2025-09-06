@@ -9,6 +9,7 @@ public class EmulatorUnitTest
     [TestInitialize]
     public void Setup()
     {
+        AppiumMethods.StartEmulator("Medium_Phone_API_33");
         AppiumMethods.BuildAppiumLocalService();
         AppiumMethods.SetupAndroidDriverOnEmulator();
         AppiumMethods.ActivateApp("com.android.settings");
@@ -35,5 +36,6 @@ public class EmulatorUnitTest
         AppiumMethods.TerminateApp("com.android.settings");
         AppiumMethods.DisposeAndroidDriver();
         AppiumMethods.DisposeAppiumService();
+        AppiumMethods.CloseEmulator();
     }
 }

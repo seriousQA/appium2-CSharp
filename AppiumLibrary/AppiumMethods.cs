@@ -676,7 +676,7 @@ public class AppiumMethods
         }
         return actualValue;
     }
-    
+
     /// <summary> Is element [N] in list displayed? </summary>
     /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
     /// <param name="element"> string, unique element name. </param>
@@ -715,6 +715,132 @@ public class AppiumMethods
         catch (Exception ex)
         {
             Console.WriteLine("An error occured: " + ex.Message);
+        }
+    }
+
+    /// <summary> Start Android emulator. </summary>
+    /// <param name="avdName"> string, name of the AVD (Android Virtual Device) to start <see cref="https://developer.android.com/studio/run/emulator-commandline?hl=en"/>. </param>
+    /// <remarks> Ensure that the Android SDK's 'emulator' command is in your system PATH. </remarks>
+    public static void StartEmulator(string avdName)
+    {
+        try
+        {
+            // 1. Check if emulator is already running
+            System.Diagnostics.ProcessStartInfo adbCheckInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/C adb devices",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            string adbOutput = "";
+            using (System.Diagnostics.Process adbProcess = System.Diagnostics.Process.Start(adbCheckInfo))
+            {
+                adbOutput = adbProcess.StandardOutput.ReadToEnd();
+                adbProcess.WaitForExit();
+            }
+
+            if (adbOutput.Contains("emulator-5554"))
+            {
+                Console.WriteLine("An emulator is already running. Connecting to existing emulator.");
+                return;
+            }
+
+            // 2. Start emulator if not running
+            string userName = Environment.GetEnvironmentVariable("USERNAME");
+            string emulatorPath = $@"C:\Users\{userName}\AppData\Local\Android\Sdk\tools\emulator.exe";
+
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = emulatorPath,
+                Arguments = $"-avd {avdName}",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            {
+                process.StartInfo = startInfo;
+                process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
+                process.ErrorDataReceived += (sender, e) => Console.WriteLine("ERROR: " + e.Data);
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                // Wait for emulator to boot (poll adb for device)
+                bool booted = false;
+                for (int i = 0; i < 20; i++) // Wait up to 20*5=100 seconds
+                {
+                    System.Threading.Thread.Sleep(5000);
+                    using (System.Diagnostics.Process checkProcess = System.Diagnostics.Process.Start(adbCheckInfo))
+                    {
+                        string checkOutput = checkProcess.StandardOutput.ReadToEnd();
+                        checkProcess.WaitForExit();
+                        if (checkOutput.Contains("emulator-5554") && checkOutput.Contains("device"))
+                        {
+                            booted = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!booted)
+                {
+                    process.Kill();
+                    throw new Exception("Emulator did not start successfully.");
+                }
+            }
+
+            Console.WriteLine($"Emulator {avdName} started and ready.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred while starting the emulator: " + ex.Message);
+            throw; // Stop the test by rethrowing the exception
+        }
+    }
+
+    /// <summary> Close Android emulator. </summary>
+    /// <remarks> Ensure that the Android SDK's 'adb' command is in your system PATH. </remarks>
+    public static void CloseEmulator()
+    {
+        try
+        {
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/C adb emu kill",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            {
+                process.StartInfo = startInfo;
+                process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
+                process.ErrorDataReceived += (sender, e) => Console.WriteLine("ERROR: " + e.Data);
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                // Optionally, wait for the emulator to close
+                Thread.Sleep(5000); // Wait for 5 seconds (adjust as necessary)
+            }
+
+            Console.WriteLine("Emulator closed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred while closing the emulator: " + ex.Message);
         }
     }
 }
