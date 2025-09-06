@@ -725,6 +725,31 @@ public class AppiumMethods
     {
         try
         {
+            // 1. Check if emulator is already running
+            System.Diagnostics.ProcessStartInfo adbCheckInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/C adb devices",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            string adbOutput = "";
+            using (System.Diagnostics.Process adbProcess = System.Diagnostics.Process.Start(adbCheckInfo))
+            {
+                adbOutput = adbProcess.StandardOutput.ReadToEnd();
+                adbProcess.WaitForExit();
+            }
+
+            if (adbOutput.Contains("emulator-5554"))
+            {
+                Console.WriteLine("An emulator is already running. Connecting to existing emulator.");
+                return;
+            }
+
+            // 2. Start emulator if not running
             string userName = Environment.GetEnvironmentVariable("USERNAME");
             string emulatorPath = $@"C:\Users\{userName}\AppData\Local\Android\Sdk\tools\emulator.exe";
 
@@ -748,15 +773,36 @@ public class AppiumMethods
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
 
-                // Optionally, wait for the emulator to start
-                Thread.Sleep(10000); // Wait for 10 seconds (adjust as necessary)
+                // Wait for emulator to boot (poll adb for device)
+                bool booted = false;
+                for (int i = 0; i < 20; i++) // Wait up to 20*5=100 seconds
+                {
+                    System.Threading.Thread.Sleep(5000);
+                    using (System.Diagnostics.Process checkProcess = System.Diagnostics.Process.Start(adbCheckInfo))
+                    {
+                        string checkOutput = checkProcess.StandardOutput.ReadToEnd();
+                        checkProcess.WaitForExit();
+                        if (checkOutput.Contains("emulator-5554") && checkOutput.Contains("device"))
+                        {
+                            booted = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!booted)
+                {
+                    process.Kill();
+                    throw new Exception("Emulator did not start successfully.");
+                }
             }
 
-            Console.WriteLine($"Emulator {avdName} started.");
+            Console.WriteLine($"Emulator {avdName} started and ready.");
         }
         catch (Exception ex)
         {
             Console.WriteLine("An error occurred while starting the emulator: " + ex.Message);
+            throw; // Stop the test by rethrowing the exception
         }
     }
 
