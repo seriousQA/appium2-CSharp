@@ -13,21 +13,21 @@ public class EmulatorUnitTest
         AppiumMethods.BuildAppiumLocalService();
         AppiumMethods.SetupAndroidDriverOnEmulator();
         AppiumMethods.ActivateApp("com.android.settings");
-        Thread.Sleep(2000);
-    }
-
-    [TestMethod]
-    public void Settings()
-    {   
-        string actual1 = AppiumMethods.GetAttributeValue("xpath", "t_Apps", "text");
-        string expected1 = "Apps";        
-        Assert.AreEqual(expected1, actual1);
-        AppiumMethods.Swipe();
         Thread.Sleep(1000);
+    }
+    
+    [TestMethod]    
+    public void Settings()
+    {        
+        string actual, expected;
+        actual = AppiumMethods.GetAttributeValue("xpath", "t_Apps", "text");
+        expected = "Apps";
+        Assert.AreEqual(expected, actual);
+        AppiumMethods.ScrollToElement("text", "t_AboutEmulatedDevice");
+        actual = AppiumMethods.GetAttributeValue("xpath", "t_AboutEmulatedDevice", "text");
+        expected = "About emulated device";
         AppiumMethods.GetScreenshot();
-        string actual2 = AppiumMethods.GetAttributeValue("xpath", "t_AboutEmulatedDevice", "text");
-        string expected2 = "About emulated device";        
-        Assert.AreEqual(expected2, actual2);
+        Assert.AreEqual(expected, actual);
     }
 
     [TestCleanup]

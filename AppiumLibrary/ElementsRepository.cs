@@ -340,6 +340,10 @@ public class ElementsRepository
         {
             result = "//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"Apps\"]";
         }
+        if (locator.Equals("text"))
+        {
+            result = "Apps";
+        }
         return result;
     }
 
@@ -350,6 +354,10 @@ public class ElementsRepository
         if (locator.Equals("xpath"))
         {
             result = "//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"About emulated device\"]";
+        }
+        if (locator.Equals("text"))
+        {
+            result = "About emulated device";
         }
         return result;
     }

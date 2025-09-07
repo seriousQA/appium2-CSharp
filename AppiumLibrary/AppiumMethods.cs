@@ -72,7 +72,6 @@ public class AppiumMethods
         {
             AutomationName = AutomationName.AndroidUIAutomator2,
             PlatformName = "Android",
-            PlatformVersion = "13",
             DeviceName = "emulator-5554"
         };
         driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
@@ -81,7 +80,7 @@ public class AppiumMethods
 
         _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
         _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-        Console.WriteLine("Android Driver is started.");
+        Console.WriteLine("Android Driver on emulator is started.");
     }
 
     /// <summary> Dispose Android driver. </summary>
@@ -146,12 +145,12 @@ public class AppiumMethods
         try
         {
             _driver.InstallApp(apkPath);
-            Console.WriteLine("Driver: apk was installed.");
+            Console.WriteLine("Driver:" + apkPath + " was installed.");
         }
         catch (Exception ex)
         {
             Console.WriteLine("An error occured: " + ex.Message);
-            Console.WriteLine("Driver: apk was not installed.");
+            Console.WriteLine("Driver:" + apkPath + " was not installed.");
         }
     }
 
@@ -173,26 +172,25 @@ public class AppiumMethods
     /// <summary> Simulate Android phone NEXT. </summary>
     public static void AndroidNext()
     {
-        //KEYCODE_NAVIGATE_NEXT constant value: 261 (0x00000105)
+        // KEYCODE_NAVIGATE_NEXT constant value: 261 (0x00000105)
         _driver.ExecuteScript("mobile:performEditorAction", new Dictionary<string, string> { { "action", "next" } });
         Console.WriteLine("Driver: Next().");
     }
 
-    /// <summary> Execute shell script. </summary>
-    /// <param name="script"> string, script body. </param>
+    /// <summary> Execute the given mobile shell command on the android device under test via ADB connection. </summary>
+    /// <param name="script"> string, mobile shell commands. </param>
+    /// <chref="https://github.com/appium/appium-uiautomator2-driver/"> More info about mobile:shell </chref>
     public static void ExecuteShellScript(string script)
-    {
-        //E.g., to refresh Android mediastore using adb: 
-        // "adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard"        
+    { 
         _driver.ExecuteScript("mobile:shell", script);
-        Console.WriteLine("Driver: Next().");
+        Console.WriteLine("Driver: Execute mobile shell command(s): " + script);
     }
 
     /// <summary> Start recording screen. </summary>
     public static void StartRecordingScreen()
     {
         _driver.StartRecordingScreen();
-        Console.WriteLine("Driver: StartRecordingScreen().");
+        Console.WriteLine("Driver: Start recording screen().");
     }
 
     /// <summary> Stop recording screen. </summary>
@@ -201,7 +199,7 @@ public class AppiumMethods
         string video = _driver.StopRecordingScreen();
         byte[] decode = Convert.FromBase64String(video);
         File.WriteAllBytes("C:\\temp\\VideoRecording.mp4", decode);
-        Console.WriteLine("Driver: StopRecordingScreen().");
+        Console.WriteLine("Driver: Stop recording screen().");
     }
 
     /// <summary> Take a screenshot of the current viewport/window/page. </summary>
@@ -213,7 +211,7 @@ public class AppiumMethods
 
     /// <summary> Click on element. </summary>
     /// <param name="locator"> string, locator. </param>
-    /// <param name="element"> string, unique element. </param>
+    /// <param name="element"> string, unique element name. </param>
     public static void ClickOnElement(string locator, string element)
     {
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
@@ -239,7 +237,7 @@ public class AppiumMethods
 
     /// <summary> Get attribute value of element. </summary>
     /// <param name="locator"> string, locator. </param>
-    /// <param name="element"> string, unique element. </param>
+    /// <param name="element"> string, unique element name. </param>
     /// <param name="attributeName"> string, attribut to GET. </param>
     public static string GetAttributeValue(string locator, string element, string attributeName)
     {
@@ -266,9 +264,9 @@ public class AppiumMethods
         return actualValue;
     }
 
-    /// <summary> SendKeys on element. </summary>
+    /// <summary> Send keys on element. </summary>
     /// <param name="locator"> string, locator. </param>
-    /// <param name="element"> string, unique element. </param>
+    /// <param name="element"> string, unique element name. </param>
     /// <param name="value"> string, value to send. </param>
     public static void SendKeysOnElement(string locator, string element, string value)
     {
@@ -303,7 +301,7 @@ public class AppiumMethods
 
     /// <summary> Is element displayed? </summary>
     /// <param name="locator"> string, locator. </param>
-    /// <param name="element"> string, unique element. </param>
+    /// <param name="element"> string, unique element name. </param>
     public static void ValidateIsDisplayed(string locator, string element)
     {
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
@@ -341,11 +339,10 @@ public class AppiumMethods
 
     /// <summary> Is element checked? </summary>
     /// <param name="locator"> string, locator. </param>
-    /// <param name="element"> string, unique element. </param>
+    /// <param name="element"> string, unique element name. </param>
     public static void ValidateIsChecked(string locator, string element)
     {
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
-
         try
         {
             if (locator.Equals("id"))
@@ -414,16 +411,53 @@ public class AppiumMethods
         }
     }
 
-    /// <summary> Scroll to top. </summary>
+    /// <summary> Scroll to top of the page. </summary>
     public static void ScrollToTop()
     {
-        // E.g., "new UiScrollable(new UiSelector()).scrollIntoView(text(\"your Text\"));" or scroll to top:
         string command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).flingToBeginning(3)";
         _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator(command));
-        Console.WriteLine("Driver: ScrollToTop().");
+        Console.WriteLine("Driver: Scroll to top of the page.");
     }
 
-    /// <summary> Swipe. </summary>
+    /// <summary> Scroll to element. </summary>
+    /// <param name="locator"> string, locator. </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <remarks> Locator can be: resource-id, text, android uiautomator. UiSelector in Android UIAutomator does not support the xpath method. 
+    /// <see chref="https://developer.android.com/reference/androidx/test/uiautomator/UiScrollable"/> More info about UiScrollable. </remarks>
+    public static void ScrollToElement(string locator, string element)
+    {
+        try
+        {
+            System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+            if (locator.Equals("resource-id"))
+            {
+                _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().resourceId(\"" + elementInfo.Invoke(repo, new[] { locator }).ToString() + "\"))"));
+                Console.WriteLine("Driver: Scroll to element(" + element + ").");
+            }
+
+            if (locator.Equals("text"))
+            {
+                _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"" + elementInfo.Invoke(repo, new[] { locator }).ToString() + "\"))"));
+                Console.WriteLine("Driver: Scroll to element(" + element + ").");
+            }
+            if(locator.Equals("android uiautomator"))
+            {
+                _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(" + elementInfo.Invoke(repo, new[] { locator }).ToString() + ")"));
+                Console.WriteLine("Driver: Scroll to element(" + element + ").");
+            }
+            else
+            {
+                Console.WriteLine("Driver: Locator " + locator + " is not supported for ScrollToElement().");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occured: " + ex.Message);
+        }        
+    }
+
+    /// <summary> Swipe on the screen. </summary>
     public static void Swipe()
     {
         int screen_height = _driver.Manage().Window.Size.Height;
@@ -453,12 +487,12 @@ public class AppiumMethods
             sequence
         };
         _driver.PerformActions(actions_seq);
-        Console.WriteLine("Driver: Swipe()");
+        Console.WriteLine("Driver: swipe on the screen.");
     }
 
     /// <summary> Long press on element. </summary>
     /// <param name="locator"> string, locator. </param>
-    /// <param name="element"> string, unique element. </param>
+    /// <param name="element"> string, unique element name. </param>
     public static void LongPress(string locator, string element)
     {
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
@@ -490,7 +524,7 @@ public class AppiumMethods
             sequence
         };
             _driver.PerformActions(actions_seq);
-            Console.WriteLine("Driver: LongPress() on " + element);
+            Console.WriteLine("Driver: long press on " + element);
         }
         catch (Exception ex)
         {
@@ -504,12 +538,12 @@ public class AppiumMethods
         try
         {
             _driver.Navigate().GoToUrl(url);
-            Console.WriteLine("Driver: Navigate to " + url);
+            Console.WriteLine("Driver: navigate to " + url);
         }
         catch (Exception ex)
         {
             Console.WriteLine("An error occured: " + ex.Message);
-            Console.WriteLine("Driver: Could not navigate to " + url);
+            Console.WriteLine("Driver: could not navigate to " + url);
         }
     }
     /// <summary> Refresh the current page. </summary>
@@ -519,12 +553,12 @@ public class AppiumMethods
         try
         {
             _driver.Navigate().Refresh();
-            Console.WriteLine("Driver: Page refreshed.");
+            Console.WriteLine("Driver: page was refreshed.");
         }
         catch (Exception ex)
         {
             Console.WriteLine("An error occured: " + ex.Message);
-            Console.WriteLine("Driver: Could not refresh the page.");
+            Console.WriteLine("Driver: could not refresh the page.");
         }
     }
 
@@ -587,8 +621,8 @@ public class AppiumMethods
     }
 
     /// <summary> Press a key code on the keyboard. </summary>
-    /// <param name="key"> int, key to press (e.g., "search", "done"). 
-    /// <see cref="https://developer.android.com/reference/android/view/KeyEvent"/>  </param>
+    /// <param name="key"> int, key to press (e.g., "search", "done"). </param>
+    /// <chref="https://developer.android.com/reference/android/view/KeyEvent"/> More info about key codes. </chref>
     public static void PressKeyCode(int key)
     {
         try
@@ -629,13 +663,13 @@ public class AppiumMethods
             {
                 elements = _driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
                 elements[index].Click();
-                Console.WriteLine("Driver: Click() on " + element + " in list at index " + index);
+                Console.WriteLine("Driver: Click on " + element + " in list at index " + index);
             }
             if (locator.Equals("xpath"))
             {
                 elements = _driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Cast<IWebElement>().ToList();
                 elements[index].Click();
-                Console.WriteLine("Driver: Click() on " + element + " in list at index " + index);
+                Console.WriteLine("Driver: Click on " + element + " in list at index " + index);
             }
         }
         catch (Exception ex)
@@ -718,8 +752,9 @@ public class AppiumMethods
         }
     }
 
-    /// <summary> Start Android emulator. </summary>
-    /// <param name="avdName"> string, name of the AVD (Android Virtual Device) to start <see cref="https://developer.android.com/studio/run/emulator-commandline?hl=en"/>. </param>
+    /// <summary> Start Android emulator using commandline. </summary>
+    /// <param name="avdName"> string, name of the AVD (Android Virtual Device) to start. </param>
+    /// <chref="https://developer.android.com/studio/run/emulator-commandline?hl=en"/> More info about emulator commandline. </chref>
     /// <remarks> Ensure that the Android SDK's 'emulator' command is in your system PATH. </remarks>
     public static void StartEmulator(string avdName)
     {
@@ -743,7 +778,7 @@ public class AppiumMethods
                 adbProcess.WaitForExit();
             }
 
-            if (adbOutput.Contains("emulator-5554"))
+            if (adbOutput.Contains("emulator-5554") && adbOutput.Contains("device"))
             {
                 Console.WriteLine("An emulator is already running. Connecting to existing emulator.");
                 return;
