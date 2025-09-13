@@ -18,6 +18,16 @@
   </p>
 </div>
 
+<a href="https://github.com/seriousQA/appium2-CSharp/issues">
+  <img src="https://img.shields.io/github/issues/seriousQA/appium2-CSharp.svg" alt="GitHub issues"/>
+</a>
+<a href="https://github.com/seriousQA/appium2-CSharp/pulls">
+  <img src="https://img.shields.io/github/issues-pr/seriousQA/appium2-CSharp.svg" alt="GitHub pull requests"/>
+</a>
+<a href="https://github.com/seriousQA/appium2-CSharp">
+  <img src="https://img.shields.io/github/stars/seriousQA/appium2-CSharp.svg?style=social" alt="GitHub stars"/>
+</a>
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
