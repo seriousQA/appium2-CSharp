@@ -9,7 +9,7 @@
   <p align="center">    
 	Mobile (real devices and emulators) testing using Appium 2.0+, VS Code, CSharp and MSTest framework.  
     <br />
-    <a href="https://github.com/seriousQA/appium2-CSharp"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/seriousQA/appium2-CSharp/wiki"><strong>Explore the docs »</strong></a>
     <br />
    ·
     <a href="https://github.com/seriousQA/appium2-CSharp/issues">Report Bug</a>
