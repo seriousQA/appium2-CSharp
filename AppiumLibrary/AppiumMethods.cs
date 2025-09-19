@@ -17,23 +17,37 @@ public class AppiumMethods
     /// <summary> Build and start Appium Service. </summary>
     public static void BuildAppiumLocalService()
     {
-        service = new AppiumServiceBuilder()
-        .WithIPAddress("127.0.0.1")
-        .UsingPort(4723)
-        .WithLogFile(new FileInfo("C:\\temp\\appiumLog.txt"))
-        .UsingDriverExecutable(new FileInfo(System.Environment.GetEnvironmentVariable("NODE_BINARY_PATH")))
-        .WithAppiumJS(new FileInfo(System.Environment.GetEnvironmentVariable("APPIUM_BINARY_PATH")))
-        .WithStartUpTimeOut(TimeSpan.FromMinutes(3))
-        .Build();
-        service.Start();
-        if (service.IsRunning.ToString().Equals("False"))
+        int maxRetries = 3;
+        int retryCount = 0;
+        int delayMs = 3000; // 3 seconds
+
+        while (retryCount < maxRetries)
         {
-            Console.WriteLine("Appium Service isn't started.");
+            service = new AppiumServiceBuilder()
+                .WithIPAddress("127.0.0.1")
+                .UsingPort(4723)
+                .WithLogFile(new FileInfo("C:\\temp\\appiumLog.txt"))
+                .UsingDriverExecutable(new FileInfo(System.Environment.GetEnvironmentVariable("NODE_BINARY_PATH")))
+                .WithAppiumJS(new FileInfo(System.Environment.GetEnvironmentVariable("APPIUM_BINARY_PATH")))
+                .WithStartUpTimeOut(TimeSpan.FromMinutes(3))
+                .Build();
+            service.Start();
+
+            if (service.IsRunning)
+            {
+                Console.WriteLine("Appium Service is started.");
+                return;
+            }
+            else
+            {
+                Console.WriteLine($"Appium Service isn't started. Retry {retryCount + 1} of {maxRetries}...");
+                service.Dispose();
+                Thread.Sleep(delayMs);
+                retryCount++;
+            }
         }
-        else
-        {
-            Console.WriteLine("Appium Service is started.");
-        }
+
+        throw new Exception("Appium Service failed to start after multiple attempts.");
     }
 
     /// <summary> Dispose Appium Service. </summary>
@@ -43,44 +57,104 @@ public class AppiumMethods
         Console.WriteLine("Appium Service is disposed.");
     }
 
-    /// <summary> Initialize Android driver.</summary>
+    /// <summary> Initialize Android driver. </summary>
     public static void SetupAndroidDriver()
     {
-        var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
-        var driverOptions = new AppiumOptions()
-        {
-            AutomationName = AutomationName.AndroidUIAutomator2,
-            PlatformName = "Android"
-        };
-        driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
-        driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
-        driverOptions.AddAdditionalAppiumOption("appium:connectHardwareKeyboard", "true");
-        driverOptions.AddAdditionalAppiumOption("appium:waitForIdleTimeout", 100);
-        driverOptions.AddAdditionalAppiumOption("appium:firstMatch", "true");
-        driverOptions.AddAdditionalAppiumOption("appium:disableWindowAnimation", "true");
+        int maxRetries = 3;
+        int retryCount = 0;
+        int delayMs = 3000; // 3 seconds
 
-        _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
-        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-        Console.WriteLine("Android Driver is started.");
+        while (retryCount < maxRetries)
+        {
+            try
+            {
+                var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
+                var driverOptions = new AppiumOptions()
+                {
+                    AutomationName = AutomationName.AndroidUIAutomator2,
+                    PlatformName = "Android"
+                };
+                driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
+                driverOptions.AddAdditionalAppiumOption("appium:connectHardwareKeyboard", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:waitForIdleTimeout", 100);
+                driverOptions.AddAdditionalAppiumOption("appium:firstMatch", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:disableWindowAnimation", "true");
+
+                _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                if (_driver.SessionId != null)
+                {
+                    Console.WriteLine("Android Driver is started.");
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine($"Android Driver isn't started. Retry {retryCount + 1} of {maxRetries}...");
+                    _driver.Dispose();
+                    Thread.Sleep(delayMs);
+                    retryCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Android Driver failed to start: {ex.Message}. Retry {retryCount + 1} of {maxRetries}...");
+                Thread.Sleep(delayMs);
+                retryCount++;
+            }
+        }
+
+        throw new Exception("Android Driver failed to start after multiple attempts.");
     }
 
-    /// <summary> Initialize Android driver.</summary>
+    /// <summary> Initialize Android driver on emulator. </summary>
     public static void SetupAndroidDriverOnEmulator()
     {
-        var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
-        var driverOptions = new AppiumOptions()
-        {
-            AutomationName = AutomationName.AndroidUIAutomator2,
-            PlatformName = "Android",
-            DeviceName = "emulator-5554"
-        };
-        driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
-        driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
-        driverOptions.AddAdditionalAppiumOption("appium:autoGrantPermissions", "true");
+        int maxRetries = 3;
+        int retryCount = 0;
+        int delayMs = 3000; // 3 seconds
 
-        _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
-        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-        Console.WriteLine("Android Driver on emulator is started.");
+        while (retryCount < maxRetries)
+        {
+            try
+            {
+                var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
+                var driverOptions = new AppiumOptions()
+                {
+                    AutomationName = AutomationName.AndroidUIAutomator2,
+                    PlatformName = "Android",
+                    DeviceName = "emulator-5554"
+                };
+                driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
+                driverOptions.AddAdditionalAppiumOption("appium:autoGrantPermissions", "true");
+
+                _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                if (_driver.SessionId != null)
+                {
+                    Console.WriteLine("Android Driver on emulator is started.");
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine($"Android Driver on emulator isn't started. Retry {retryCount + 1} of {maxRetries}...");
+                    _driver.Dispose();
+                    Thread.Sleep(delayMs);
+                    retryCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Android Driver on emulator failed to start: {ex.Message}. Retry {retryCount + 1} of {maxRetries}...");
+                Thread.Sleep(delayMs);
+                retryCount++;
+            }
+        }
+
+        throw new Exception("Android Driver on emulator failed to start after multiple attempts.");
     }
 
     /// <summary> Dispose Android driver. </summary>
@@ -434,7 +508,6 @@ public class AppiumMethods
                 _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().resourceId(\"" + elementInfo.Invoke(repo, new[] { locator }).ToString() + "\"))"));
                 Console.WriteLine("Driver: Scroll to element(" + element + ").");
             }
-
             if (locator.Equals("text"))
             {
                 _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"" + elementInfo.Invoke(repo, new[] { locator }).ToString() + "\"))"));
@@ -445,7 +518,7 @@ public class AppiumMethods
                 _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(" + elementInfo.Invoke(repo, new[] { locator }).ToString() + ")"));
                 Console.WriteLine("Driver: Scroll to element(" + element + ").");
             }
-            else
+            if(locator != "resource-id" && locator != "text" && locator != "android uiautomator")
             {
                 Console.WriteLine("Driver: Locator " + locator + " is not supported for ScrollToElement().");
                 return;
