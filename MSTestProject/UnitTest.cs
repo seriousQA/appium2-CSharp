@@ -3,6 +3,9 @@ using AppiumLibrary;
 
 namespace MSTestProject;
 
+// AUT: com.android.calculator2. 
+// Tested on: real Huawei device.
+// "locale":"de_DE", "manufacturer":"HUAWEI", "model":"ANE-LX1", "platformVersion":"9".
 [TestClass]
 public class UnitTest
 {

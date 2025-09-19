@@ -3,6 +3,9 @@ using AppiumLibrary;
 
 namespace MSTestProject;
 
+// AUT: com.android.chrome. 
+// Tested on emulator-5554
+// "locale":"en_EN", "platformName": "Android", "platformVersion":"13".
 [TestClass]
 public class WebTestSet
 {
