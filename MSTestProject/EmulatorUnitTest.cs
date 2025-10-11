@@ -15,6 +15,7 @@ public class EmulatorUnitTest
         AppiumMethods.StartEmulator("Medium_Phone_API_33");
         AppiumMethods.BuildAppiumLocalService();
         AppiumMethods.SetupAndroidDriverOnEmulator();
+        AppiumMethods.EnsureAppiumSession(true); // true = use emulator
         AppiumMethods.ActivateApp("com.android.settings");
         Thread.Sleep(1000);
     }

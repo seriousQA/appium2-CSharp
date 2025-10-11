@@ -157,6 +157,67 @@ public class AppiumMethods
         throw new Exception("Android Driver on emulator failed to start after multiple attempts.");
     }
 
+    /// <summary> Ensure Appium server and driver session are active. If not, create new ones. </summary>
+    /// <param name="useEmulator"> bool, if true, use emulator for driver session. Default is false. </param>
+    public static void EnsureAppiumSession(bool useEmulator = false)
+    {
+        // Check Appium service
+        if (service == null || !service.IsRunning)
+        {
+            try
+            {
+                service?.Dispose();
+            }
+            catch { /* ignore */ }
+            BuildAppiumLocalService();
+            Console.WriteLine("Appium Service was not running and is being restarted.");
+        }
+
+        // Check driver session
+        if (_driver == null || _driver.SessionId == null)
+        {
+            try
+            {
+                _driver?.Dispose();
+            }
+            catch { /* ignore */ }
+            if (useEmulator)
+            {
+                SetupAndroidDriverOnEmulator();
+                Console.WriteLine("Android Driver on emulator was not active and is being restarted.");
+            }
+            else
+            {
+                SetupAndroidDriver();
+                Console.WriteLine("Android Driver was not active and is being restarted.");
+            }
+        }
+        else
+        {
+            try
+            {
+                // Try a simple command to check if session is still valid
+                var sessionId = _driver.SessionId;
+                _driver.CurrentActivity.ToString(); // Throws if session is dead
+            }
+            catch
+            {
+                try { _driver?.Dispose(); } catch { }
+                if (useEmulator)
+                {
+                    SetupAndroidDriverOnEmulator();
+                    Console.WriteLine("Android Driver on emulator was not active and is being restarted.");
+                }
+                else
+                {
+                    SetupAndroidDriver();
+                    Console.WriteLine("Android Driver was not active and is being restarted.");
+                }
+            }
+        }
+        Console.WriteLine("Appium server and driver session are active.");
+    }
+
     /// <summary> Dispose Android driver. </summary>
     public static void DisposeAndroidDriver()
     {
@@ -255,7 +316,7 @@ public class AppiumMethods
     /// <param name="script"> string, mobile shell commands. </param>
     /// <chref="https://github.com/appium/appium-uiautomator2-driver/"> More info about mobile:shell </chref>
     public static void ExecuteShellScript(string script)
-    { 
+    {
         _driver.ExecuteScript("mobile:shell", script);
         Console.WriteLine("Driver: Execute mobile shell command(s): " + script);
     }
@@ -513,12 +574,12 @@ public class AppiumMethods
                 _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"" + elementInfo.Invoke(repo, new[] { locator }).ToString() + "\"))"));
                 Console.WriteLine("Driver: Scroll to element(" + element + ").");
             }
-            if(locator.Equals("android uiautomator"))
+            if (locator.Equals("android uiautomator"))
             {
                 _driver.FindElement(ByAndroidUIAutomator.AndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(" + elementInfo.Invoke(repo, new[] { locator }).ToString() + ")"));
                 Console.WriteLine("Driver: Scroll to element(" + element + ").");
             }
-            if(locator != "resource-id" && locator != "text" && locator != "android uiautomator")
+            if (locator != "resource-id" && locator != "text" && locator != "android uiautomator")
             {
                 Console.WriteLine("Driver: Locator " + locator + " is not supported for ScrollToElement().");
                 return;
@@ -527,7 +588,7 @@ public class AppiumMethods
         catch (Exception ex)
         {
             Console.WriteLine("An error occured: " + ex.Message);
-        }        
+        }
     }
 
     /// <summary> Swipe on the screen. </summary>
