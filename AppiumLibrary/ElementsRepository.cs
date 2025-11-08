@@ -361,6 +361,20 @@ public class ElementsRepository
         }
         return result;
     }
+    /// <summary> Chrome: "Home" Button. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string chrome_home(string locator)
+    {
+        if (locator.Equals("id"))
+        {
+            result = "com.android.chrome:id/home_button";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "//android.widget.ImageButton[@content-desc=\"Home\"]";
+        }
+        return result;
+    }
 
     /// <summary> Chrome: "search box" EditText. </summary>
     /// <param name="locator"> string locator. </param>
@@ -425,6 +439,51 @@ public class ElementsRepository
         if (locator.Equals("xpath"))
         {
             result = "//android.view.View[contains(@resource-id, \"navlink\")]";
+        }
+        return result;
+    }
+
+    // <summary> "Willkommen bei Wikipedia" Title. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string Willkommen_bei_Wikipedia(string locator)
+    {
+        if (locator.Equals("id"))
+        {
+            result = "Willkommen_bei_Wikipedia";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "//h2[@id=\"Willkommen_bei_Wikipedia\"]";
+        }
+        return result;
+    }
+
+    // <summary> "Presse" Title. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string Wikipedia_Presse(string locator)
+    {
+        if (locator.Equals("title"))
+        {
+            result = "Wikipedia:Presse";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "//ul[@id=\"intern\"]/li[4]/a";
+        }
+        return result;
+    }
+
+    // <summary> "Über Wikipedia" Title. </summary>
+    /// <param name="locator"> string locator. </param>
+    public static string Ueber_Wikipedia(string locator)
+    {
+        if (locator.Equals("title"))
+        {
+            result = "Wikipedia:Über Wikipedia";
+        }
+        if (locator.Equals("xpath"))
+        {
+            result = "(//section[@id=\"mf-section-0\"])[2]/div[1]/div[1]/b/a";
         }
         return result;
     }

@@ -4,7 +4,9 @@ using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.Service;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using System.Diagnostics;
 
 namespace AppiumLibrary;
 
@@ -12,6 +14,7 @@ public class AppiumMethods
 {
     private static AppiumLocalService service;
     private static AndroidDriver _driver;
+    private static RemoteWebDriver _webDriver;
     private static Type repo = typeof(AppiumLibrary.ElementsRepository);
 
     /// <summary> Build and start Appium Service. </summary>
@@ -74,12 +77,18 @@ public class AppiumMethods
                     AutomationName = AutomationName.AndroidUIAutomator2,
                     PlatformName = "Android"
                 };
-                driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", true);
+                driverOptions.AddAdditionalAppiumOption("appium:autoGrantPermissions", true);
                 driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
                 driverOptions.AddAdditionalAppiumOption("appium:connectHardwareKeyboard", "true");
                 driverOptions.AddAdditionalAppiumOption("appium:waitForIdleTimeout", 100);
                 driverOptions.AddAdditionalAppiumOption("appium:firstMatch", "true");
                 driverOptions.AddAdditionalAppiumOption("appium:disableWindowAnimation", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:chromedriverExecutable", "C:\\chromedriver\\chromedriver.exe");
+                driverOptions.AddAdditionalAppiumOption("appium:chromedriverExecutableDir", "C:\\chromedriver");
+                driverOptions.AddAdditionalAppiumOption("appium:ensureWebviewsHavePages", true);
+                driverOptions.AddAdditionalAppiumOption("appium:nativeWebScreenshot", true);
+                driverOptions.AddAdditionalAppiumOption("appium:connectHardwareKeyboard", true);
 
                 _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
                 _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -126,9 +135,30 @@ public class AppiumMethods
                     PlatformName = "Android",
                     DeviceName = "emulator-5554"
                 };
-                driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", "true");
+                // standard Appium options
+                driverOptions.AddAdditionalAppiumOption("appium:autoAcceptAlerts", true);
+                driverOptions.AddAdditionalAppiumOption("appium:autoGrantPermissions", true);
                 driverOptions.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
-                driverOptions.AddAdditionalAppiumOption("appium:autoGrantPermissions", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:disableWindowAnimation", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:connectHardwareKeyboard", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:waitForIdleTimeout", 100);
+                driverOptions.AddAdditionalAppiumOption("appium:firstMatch", "true");
+                driverOptions.AddAdditionalAppiumOption("appium:connectHardwareKeyboard", true);
+
+                // ensure chromedriver binary is used by Appium's chromedriver bridge
+                driverOptions.AddAdditionalAppiumOption("appium:chromedriverExecutable", "C:\\chromedriver\\chromedriver.exe");
+                driverOptions.AddAdditionalAppiumOption("appium:chromedriverExecutableDir", "C:\\chromedriver");
+                
+                // ensure webviews have pages so contexts appear
+                driverOptions.AddAdditionalAppiumOption("appium:ensureWebviewsHavePages", true);
+                driverOptions.AddAdditionalAppiumOption("appium:nativeWebScreenshot", true);                
+
+                // Chrome args to chromedriver
+                var chromeOptions = new Dictionary<string, object>
+                {
+                    { "args", new[] { "--disable-fre", "--no-first-run" } }
+                };
+                driverOptions.AddAdditionalAppiumOption("goog:chromeOptions", chromeOptions);
 
                 _driver = new AndroidDriver(serverUri, driverOptions, TimeSpan.FromSeconds(180));
                 _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -155,6 +185,61 @@ public class AppiumMethods
         }
 
         throw new Exception("Android Driver on emulator failed to start after multiple attempts.");
+    }
+    
+    /// <summary> Initialize remote web driver on emulator. </summary>
+    public static void SetupRemoteWebDriverOnEmulator()
+    {
+        int maxRetries = 3;
+        int retryCount = 0;
+        int delayMs = 3000; // 3 seconds
+
+        while (retryCount < maxRetries)
+        {
+            try
+            {
+                var serverUri = new Uri(Environment.GetEnvironmentVariable("APPIUM_HOST") ?? "http://127.0.0.1:4723/");
+                var options = new AppiumOptions()
+                {
+                    PlatformName = "Android",
+                    DeviceName = "emulator-5554",
+                    BrowserName = "Chrome"
+                };
+                // Use Appium-specific additional options for keys not exposed as properties
+                options.AddAdditionalAppiumOption("appium:autoAcceptAlerts", true);
+                options.AddAdditionalAppiumOption("appium:newCommandTimeout", 180);
+                options.AddAdditionalAppiumOption("appium:autoGrantPermissions", true);
+                // optional: specify a chromedriver executable if autodetect fails
+                options.AddAdditionalAppiumOption("chromedriverExecutableDir", @"C:\chromedriver\chromedriver.exe");
+                // optional: or use chromedriverExecutableDir if you maintain multiple binaries
+                options.AddAdditionalAppiumOption("chromedriverExecutableDir", @"C:\chromedriver");
+                
+                var capabilities = options.ToCapabilities();
+                _webDriver = new RemoteWebDriver(serverUri, capabilities, TimeSpan.FromSeconds(180));
+                _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                if (_webDriver.SessionId != null)
+                {
+                    Console.WriteLine("RemoteWebDriver on emulator is started.");
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine($"RemoteWebDriver on emulator isn't started. Retry {retryCount + 1} of {maxRetries}...");
+                    _webDriver?.Dispose();
+                    Thread.Sleep(delayMs);
+                    retryCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"RemoteWebDriver on emulator failed to start: {ex.Message}. Retry {retryCount + 1} of {maxRetries}...");
+                Thread.Sleep(delayMs);
+                retryCount++;
+            }
+        }
+
+        throw new Exception("RemoteWebDriver on emulator failed to start after multiple attempts.");
     }
 
     /// <summary> Ensure Appium server and driver session are active. If not, create new ones. </summary>
@@ -219,10 +304,33 @@ public class AppiumMethods
     }
 
     /// <summary> Dispose Android driver. </summary>
+    public static void DisposeRemoteWebDriver()
+    {
+        _webDriver.Dispose();
+        Console.WriteLine("RemoteWebDriver is disposed.");
+    }
+
+    /// <summary> Dispose Android driver. </summary>
     public static void DisposeAndroidDriver()
     {
         _driver.Dispose();
         Console.WriteLine("Android Driver is disposed.");
+    }
+
+    /// <summary> Get active driver (AndroidDriver or RemoteWebDriver). </summary>
+    private static IWebDriver GetActiveDriver()
+    {
+        // prefer explicit web driver (RemoteWebDriver) when present
+        if (_webDriver != null && _webDriver.SessionId != null)
+        {
+            return _webDriver;
+        }
+        // fall back to android driver (native or webview via AppiumDriver)
+        if (_driver != null && _driver.SessionId != null)
+        {
+            return _driver;
+        }
+        return null;
     }
 
     /// <summary> Activate App. </summary>
@@ -294,6 +402,15 @@ public class AppiumMethods
     {
         _driver.HideKeyboard();
         Console.WriteLine("Driver: HideKeyboard().");
+    }
+
+    /// <summary> Switch context. </summary>
+    /// <param name="contextName"> string, context name. </param>
+    public static void SwitchContext(string contextName)
+    {
+        //KEYCODE_BACK constant value: 4 (0x00000004)
+        _driver.Context = contextName;
+        Console.WriteLine("Driver: SwitchContext() to " + contextName);
     }
 
     /// <summary> Simulate Android phone BACK. </summary>
@@ -440,31 +557,42 @@ public class AppiumMethods
     public static void ValidateIsDisplayed(string locator, string element)
     {
         System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        // use the active driver (RemoteWebDriver or AndroidDriver)
+        var driver = GetActiveDriver();
+        if (driver == null)
+        {
+            Console.WriteLine("No active driver session. Cannot validate element visibility.");
+            return;
+        }
+        string selector = elementInfo.Invoke(repo, new[] { locator })?.ToString();
+        if (string.IsNullOrEmpty(selector))
+        {
+            Console.WriteLine("Selector for element '" + element + "' is empty or null.");
+            return;
+        }
 
         try
         {
-            if (locator.Equals("id"))
+            IWebElement el = locator.Equals("id", StringComparison.OrdinalIgnoreCase)
+                ? driver.FindElement(By.Id(selector))
+                : locator.Equals("xpath", StringComparison.OrdinalIgnoreCase)
+                    ? driver.FindElement(By.XPath(selector))
+                    : locator.Equals("css", StringComparison.OrdinalIgnoreCase)
+                        ? driver.FindElement(By.CssSelector(selector))
+                        : throw new ArgumentException($"Unsupported locator type '{locator}'");
+
+            if (el.Displayed)
             {
-                if (_driver.FindElement(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).GetAttribute("displayed").ToString().Equals("true"))
-                {
-                    Console.WriteLine("Driver: " + element + " is displayed.");
-                }
-                else
-                {
-                    Console.WriteLine("Driver: " + element + " is not displayed.");
-                }
+                Console.WriteLine("Driver: " + element + " is displayed.");
             }
-            if (locator.Equals("xpath"))
+            else
             {
-                if (_driver.FindElement(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).GetAttribute("displayed").ToString().Equals("true"))
-                {
-                    Console.WriteLine("Driver: " + element + " is displayed.");
-                }
-                else
-                {
-                    Console.WriteLine("Driver: " + element + " is not displayed.");
-                }
+                Console.WriteLine("Driver: " + element + " is not displayed.");
             }
+        }
+        catch (OpenQA.Selenium.NoSuchElementException)
+        {
+            Console.WriteLine("Driver: Element " + element + " not found using " + locator + ".");
         }
         catch (Exception ex)
         {
@@ -506,6 +634,19 @@ public class AppiumMethods
         catch (Exception ex)
         {
             Console.WriteLine("An error occured: " + ex.Message);
+        }
+    }
+    /// <summary> Clear Chrome app data so Chrome opens fresh (home/newtab), not last opened page. </summary>
+    public static void ClearChromeApp()
+    {
+        var script = new ProcessStartInfo("adb", "shell pm clear com.android.chrome")
+        {
+            CreateNoWindow = true,
+            UseShellExecute = false
+        };
+        using (var p = Process.Start(script))
+        {
+            p?.WaitForExit();
         }
     }
 

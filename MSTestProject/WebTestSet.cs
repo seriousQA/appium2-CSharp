@@ -14,7 +14,8 @@ public class WebTestSet
     {
         AppiumMethods.BuildAppiumLocalService();
         AppiumMethods.SetupAndroidDriverOnEmulator();
-        AppiumMethods.ActivateApp("com.android.chrome");
+        AppiumMethods.ActivateApp("com.android.chrome");        
+        AppiumMethods.ClickOnElement("id", "chrome_home");
         AppiumMethods.WaitTillElementIsVisible("id", "chrome_search_box_text", 5);
         AppiumMethods.ClickOnElement("id", "chrome_search_box_text");
         AppiumMethods.WaitTillElementIsVisible("id", "chrome_url_bar", 5);
