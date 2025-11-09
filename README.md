@@ -95,7 +95,7 @@ Necessary tools and packages:
 * node
 * npm
 * jdk
-* Appium 2.0+ with uiautomator2 driver
+* Appium 2.0+ with uiautomator2 and chromedriver
 * Appium-Inspector
 * appium-doctor (optional)
 * Android Studio (AVD)
