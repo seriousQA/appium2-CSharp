@@ -19,6 +19,7 @@ public class UnitTest
     }
 
     [TestMethod]
+    [Ignore("Requires real Huawei device")]
     public void TestMethod1_Sum()
     {
         AppiumMethods.ClickOnElement("id", "btn_digit7");
@@ -31,6 +32,7 @@ public class UnitTest
     }
 
     [TestMethod]
+    [Ignore("Requires real Huawei device")]
     public void TestMethod2_Sub()
     {
         AppiumMethods.ClickOnElement("id", "btn_digit1");
@@ -44,6 +46,7 @@ public class UnitTest
     }
 
     [TestMethod]
+    [Ignore("Requires real Huawei device")]
     public void TestMethod3_Div()
     {
         AppiumMethods.ClickOnElement("id", "btn_digit8");
@@ -56,6 +59,7 @@ public class UnitTest
     }
 
     [TestMethod]
+    [Ignore("Requires real Huawei device")]
     public void TestMethod4_Mul()
     {
         AppiumMethods.ClickOnElement("id", "btn_digit6");
@@ -70,6 +74,7 @@ public class UnitTest
     }
 
     [TestMethod]
+    [Ignore("Requires real Huawei device")]
     public void TestMethod5_DecimalPoint()
     {
         AppiumMethods.ClickOnElement("xpath", "btn_digit2");
@@ -84,6 +89,7 @@ public class UnitTest
     }
 
     [TestMethod]
+    [Ignore("Requires real Huawei device")]
     public void TestMethod6_Percentage()
     {
         AppiumMethods.ClickOnElement("id", "btn_digit1");

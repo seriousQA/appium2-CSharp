@@ -12,6 +12,7 @@ public class HybridTestSet
     [TestInitialize]
     public void Setup()
     {
+        AppiumMethods.StartEmulator("Medium_Phone_API_33");
         AppiumMethods.BuildAppiumLocalService();
         AppiumMethods.SetupAndroidDriverOnEmulator();
         AppiumMethods.ActivateApp("com.android.chrome");
@@ -25,13 +26,16 @@ public class HybridTestSet
     }
 
     [TestMethod]
-    public void openWikipedia()
+    public void OpenWikipedia()
     {
         AppiumMethods.SwitchContext("WEBVIEW_chrome");
         AppiumMethods.WaitTillElementIsVisible("id", "Willkommen_bei_Wikipedia", 20);
         AppiumMethods.ValidateIsDisplayed("xpath", "Wikipedia_Presse");
         AppiumMethods.GetScreenshot();
         AppiumMethods.ClickOnElement("xpath", "Wikipedia_Presse");
+        // to test waiting for element to disappear
+        AppiumMethods.WaitTillElementDisappear("id", "Willkommen_bei_Wikipedia", 20);
+
         AppiumMethods.WaitTillElementIsVisible("xpath", "Ueber_Wikipedia", 20);
         AppiumMethods.ValidateIsDisplayed("xpath", "Ueber_Wikipedia");
         AppiumMethods.GetScreenshot();
@@ -44,5 +48,6 @@ public class HybridTestSet
         AppiumMethods.TerminateApp("com.android.chrome");
         AppiumMethods.DisposeAndroidDriver();
         AppiumMethods.DisposeAppiumService();
+        AppiumMethods.CloseEmulator();
     }
 }
