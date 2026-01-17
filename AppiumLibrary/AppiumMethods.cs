@@ -895,6 +895,55 @@ public class AppiumMethods
         }
     }
 
+    /// <summary> Wait until element disappear. </summary>
+    /// <param name="locator"> string, locator type (e.g., "id", "xpath"). </param>
+    /// <param name="element"> string, unique element name. </param>
+    /// <param name="timeoutInSeconds"> int, timeout in seconds. </param>
+    public static void WaitTillElementDisappear(string locator, string element, int timeoutInSeconds)
+    {
+        System.Reflection.MethodInfo elementInfo = repo.GetMethod(element);
+        WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutInSeconds));
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        try
+        {
+            if (locator.Equals("id"))
+            {
+                wait.Until(driver => driver.FindElements(By.Id(elementInfo.Invoke(repo, new[] { locator }).ToString())).Count < 1);                
+                Console.WriteLine("Driver: Element " + element + " disappeared.");
+            }
+            if (locator.Equals("TagName"))
+            {
+                wait.Until(driver => driver.FindElements(By.TagName(elementInfo.Invoke(repo, new[] { locator }).ToString())).Count < 1);
+                Console.WriteLine("Driver: Element " + element + " disappeared.");                
+            }
+            if (locator.Equals("xpath"))
+            {
+                wait.Until(driver => driver.FindElements(By.XPath(elementInfo.Invoke(repo, new[] { locator }).ToString())).Count < 1);
+                Console.WriteLine("Driver: Element " + element + " disappeared.");
+            }
+            if (locator.Equals("css"))
+            {
+                wait.Until(driver => driver.FindElements(By.CssSelector(elementInfo.Invoke(repo, new[] { locator }).ToString())).Count < 1);
+                Console.WriteLine("Driver: Element " + element + " disappeared.");
+            }
+            stopwatch.Stop();
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms.");
+        }
+        catch (WebDriverTimeoutException)
+        {
+            stopwatch.Stop();
+            Console.WriteLine("Driver: Element " + element + " did NOT disappear after " + timeoutInSeconds + " seconds.");
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms.");
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+            Console.WriteLine("An error occured: " + ex.Message);
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms.");
+        }
+    }
+
     /// <summary> Press a key code on the keyboard. </summary>
     /// <param name="key"> int, key to press (e.g., "search", "done"). </param>
     /// <chref="https://developer.android.com/reference/android/view/KeyEvent"/> More info about key codes. </chref>
@@ -1053,6 +1102,7 @@ public class AppiumMethods
                 adbProcess.WaitForExit();
             }
 
+            Console.WriteLine("ADB Output: " + adbOutput);
             if (adbOutput.Contains("emulator-5554") && adbOutput.Contains("device"))
             {
                 Console.WriteLine("An emulator is already running. Connecting to existing emulator.");
@@ -1066,7 +1116,7 @@ public class AppiumMethods
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = emulatorPath,
-                Arguments = $"-avd {avdName}",
+                Arguments = $"-avd {avdName} -gpu swiftshader_indirect",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -1095,7 +1145,13 @@ public class AppiumMethods
                         if (checkOutput.Contains("emulator-5554") && checkOutput.Contains("device"))
                         {
                             booted = true;
+                            Console.WriteLine("Emulator detected by ADB. Waiting for full boot...");
+                            System.Threading.Thread.Sleep(30000); // Additional wait to ensure full boot and system services ready
                             break;
+                        }
+                        else if (!string.IsNullOrWhiteSpace(checkOutput))
+                        {
+                            Console.WriteLine($"ADB check {i + 1}: {checkOutput.Trim()}");
                         }
                     }
                 }

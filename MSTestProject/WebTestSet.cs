@@ -12,6 +12,7 @@ public class WebTestSet
     [TestInitialize]
     public void Setup()
     {
+        AppiumMethods.StartEmulator("Medium_Phone_API_33");
         AppiumMethods.BuildAppiumLocalService();
         AppiumMethods.SetupAndroidDriverOnEmulator();
         AppiumMethods.ActivateApp("com.android.chrome");        
@@ -26,7 +27,7 @@ public class WebTestSet
     }
 
     [TestMethod]
-    public void validateNavlinks()
+    public void ValidateNavlinks()
     {
         AppiumMethods.ClickOnElement("xpath", "Geoplotnik_HeaderBurger");
         AppiumMethods.WaitTillElementIsVisible("xpath", "Geoplotnik_Navlink", 20);
@@ -48,5 +49,6 @@ public class WebTestSet
         AppiumMethods.TerminateApp("com.android.chrome");
         AppiumMethods.DisposeAndroidDriver();
         AppiumMethods.DisposeAppiumService();
+        AppiumMethods.CloseEmulator();
     }
 }
